@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  api_db:
+    image: postgres:alpine
+    container_name: api-db
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=api-db
+    volumes:
+      - postgres-db_api:/data/db
+    ports:
+      - 5432:5432
+    networks:
+      - api-network
+
+volumes:
+  postgres-db_api:
+
+networks:
+  api-network:
+    driver: bridge
