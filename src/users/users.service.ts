@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { maxLimit } from 'src/common/constants/common.const';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FindUsersDto } from './dto/find-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { collectionName, defaultUserStatus } from './constants/user.const';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -13,48 +13,40 @@ export class UsersService {
   constructor(private readonly userRepository: UserRepository) {}
 
   create(createUserDto: CreateUserDto): Promise<User> {
-
-    if (!createUserDto.status) {
-      createUserDto.status = defaultUserStatus;
-    }
-
     return this.userRepository.createUser(createUserDto);
   }
 
-  // batch(createUserDtos: CreateUserDto[]): Promise<void> {
-  //   return;
-  //   // return this.firestoreClientService.batch(
-  //   //   collectionName, 
-  //   //   createUserDtos.map(createUserDto => {
-  //   //     if (!createUserDto.status) {
-  //   //       createUserDto.status = defaultUserStatus;
-  //   //     }
-  //   //     return createUserDto;
-  //   //   })
-  //   // );
-  // }
+  bulk(createUserDtos: CreateUserDto[]): Promise<User[]> {
+    return this.userRepository.bulkUsers(createUserDtos);
+  }
 
-  // update(id: string, updateUserDto: UpdateUserDto): Promise<void> {
-  //   return;
-  //   // return this.firestoreClientService.update(collectionName, id, updateUserDto);
-  // }
+  update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
 
-  // findAll(paginationDto: PaginationDto): Promise<User[]> {
-  //   const user = new User();
-  //   return [user]
-  //   // return this.firestoreClientService.findAll(collectionName, paginationDto);
-  // }
+    if (!Object.keys(updateUserDto).length) {
+      throw new BadRequestException('Update request is empty');
+    }
 
-  // find(findUsersDto: FindUsersDto): Promise<User[]> {
-  //   return this.firestoreClientService.find(collectionName, findUsersDto);
-  // }
+    return this.userRepository.updateUser(id, updateUserDto);
+  }
 
-  // findOne(id: string): Promise<User> {
-  //   return this.firestoreClientService.findOne(collectionName, id);
-  // }
+  find(findUsersDto: FindUsersDto): Promise<User[]> {
+    return this.userRepository.findUsers(findUsersDto);
+  }
 
-  // remove(id: string): Promise<void> {
-  //   return ;
-  //   // return this.firestoreClientService.remove(collectionName, id);
-  // }
+  findOne(id: number): Promise<User> {
+    return this.userRepository.findOneUser(id);
+  }
+
+  findAll(paginationDto: PaginationDto): Promise<User[]> {
+    let { start = 0, limit = maxLimit } = paginationDto;
+    
+    if (start < 0) start = 0;
+    if (limit < 1 || limit > maxLimit) limit = maxLimit;
+
+    return this.userRepository.findAllUsers({ start, limit });
+  }
+
+  remove(id: number): Promise<void> {
+    return this.userRepository.removeUser(id);
+  }
 }

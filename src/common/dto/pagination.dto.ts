@@ -2,9 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsInt,
   IsNotEmpty,
-  IsNumberString,
   IsOptional,
-  MaxLength,
 } from 'class-validator';
 
 export class PaginationDto {

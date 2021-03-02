@@ -1,4 +1,4 @@
 const smallStringMaxLength = 100;
-const defaultLimit = 10;
+const maxLimit = 10;
 
-export { smallStringMaxLength, defaultLimit };
+export { smallStringMaxLength, maxLimit };

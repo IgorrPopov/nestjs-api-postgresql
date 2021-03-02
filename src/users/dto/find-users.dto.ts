@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsFirebasePushId, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
 
 export class FindUsersDto {
   @IsOptional()
   @IsNotEmpty()
-  @IsString()
-  @IsFirebasePushId()
-  @ApiProperty({ example: '5QujReZ4R2tHQNPwip66' })
-  readonly id: string;
+  @IsInt()
+  @IsPositive()
+  @ApiProperty({ example: '45' })
+  readonly id: number;
 
   @IsOptional()
   @IsNotEmpty()

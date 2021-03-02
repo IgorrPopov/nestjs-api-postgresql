@@ -15,7 +15,7 @@ export class User extends BaseEntity {
   @ApiProperty({ example: 'Flintstone' })
   readonly lastName: string;
 
-  @Column()
+  @Column({ default: 'user' })
   @ApiProperty({ example: 'user' })
   readonly status: string;
 

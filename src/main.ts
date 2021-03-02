@@ -18,13 +18,12 @@ async function bootstrap() {
   );
 
   const options = new DocumentBuilder()
-    .setTitle('Movie API')
+    .setTitle('API')
     .setDescription(
-      `Open Movie API that provides the ability to add movies to the 
-      database and retrieve a list of movies or one movie by id from the database`
+      'Open API that provides all range of CRUD operations with User model'
     )
     .setVersion('0.0.1')
-    .addTag('movies')
+    .addTag('users')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseArrayPipe,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -25,9 +26,10 @@ export class UsersController {
   @Post()
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({
+    type: User,
     status: 201,
     description: `Add one user instance and after it was created (added to the DB) 
-    returns void`
+    returns it`
   })
   @ApiResponse({
     status: 400,
@@ -38,115 +40,117 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  // @Post('batch')
-  // @ApiBody({ type: [CreateUserDto]})
-  // @ApiResponse({
-  //   status: 201,
-  //   description: `Add multiple user instances and after they were created (added to the DB) 
-  //   returns void`
-  // })
-  // @ApiResponse({
-  //   status: 400,
-  //   description: `If the request body does not match array of CreateUserDtos 
-  //   then the API will return 400 bad request`
-  // })
-  // batch(
-  //   @Body(new ParseArrayPipe({ items: CreateUserDto }))
-  //   createUserDtos: CreateUserDto[],
-  // ): Promise<void> {
-  //   return this.usersService.batch(createUserDtos);
-  // }
+  @Post('bulk')
+  @ApiBody({ type: [CreateUserDto]})
+  @ApiResponse({
+    type: [User],
+    status: 201,
+    description: `Add multiple user instances and after they were created (added to the DB) 
+    returns them`
+  })
+  @ApiResponse({
+    status: 400,
+    description: `If the request body does not match array of CreateUserDtos 
+    then the API will return 400 bad request`
+  })
+  bulk(
+    @Body(new ParseArrayPipe({ items: CreateUserDto }))
+    createUserDtos: CreateUserDto[]
+  ): Promise<User[]> {
+    return this.usersService.bulk(createUserDtos);
+  }
 
-  // @Patch(':id')
-  // @ApiParam({
-  //   name: 'id',
-  //   example: '5QujReZ4R2tHQNPwip66'
-  // })
-  // @ApiBody({ type: UpdateUserDto })
-  // @ApiResponse({
-  //   status: 200,
-  //   description:
-  //     'Update existing user instance in the database and return void'
-  // })
-  // @ApiResponse({
-  //   status: 400,
-  //   description: `If the request body does not match UpdateUserDto or it's empty 
-  //   then the API will return 400 bad request`
-  // })
-  // @ApiResponse({
-  //   status: 404,
-  //   description:
-  //     'If you provide user id that does not exist API will return 404 NotFoundException'
-  // })
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateUserDto: UpdateUserDto,
-  // ): Promise<void> {
-  //   return this.usersService.update(id, updateUserDto);
-  // }
+  @Patch(':id')
+  @ApiParam({
+    name: 'id',
+    example: '55'
+  })
+  @ApiBody({ type: UpdateUserDto })
+  @ApiResponse({
+    type: User,
+    status: 200,
+    description:
+      'Update an existing user instance in the database and returns the user'
+  })
+  @ApiResponse({
+    status: 400,
+    description: `If the request body does not match UpdateUserDto or it's empty 
+    then the API will return 400 bad request`
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      'If you provide user id that does not exist API will return 404 NotFoundException'
+  })
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    return this.usersService.update(id, updateUserDto);
+  }
 
-  // @ApiQuery({
-  //   type: FindUsersDto
-  // })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Returns an array of users from the database by multiple parameters',
-  //   type: [User]
-  // })
-  // @ApiResponse({
-  //   status: 404,
-  //   description:
-  //     'If you provide id in the query and the user with this id does not exist API will return 404 NotFoundException'
-  // })
-  // @ApiResponse({
-  //   status: 400,
-  //   description: `If the query does not match FindUsersDto then the API will return 400 bad request`
-  // })
-  // @Get()
-  // find(@Query() findUsersDto: FindUsersDto): Promise<User[]> {
-  //   return this.usersService.find(findUsersDto);
-  // }
+  @ApiQuery({
+    type: FindUsersDto
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns an array of users from the database by multiple parameters',
+    type: [User]
+  })
+  @ApiResponse({
+    status: 400,
+    description: `If the query does not match FindUsersDto then the API will return 400 bad request`
+  })
+  @Get()
+  find(@Query() findUsersDto: FindUsersDto): Promise<User[]> {
+    return this.usersService.find(findUsersDto);
+  }
 
-  // @Get('find/:id')
-  // @ApiParam({
-  //   name: 'id',
-  //   example: '5QujReZ4R2tHQNPwip66'
-  // })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Returns one user from the database by his id',
-  //   type: User
-  // })
-  // @ApiResponse({
-  //   status: 404,
-  //   description:
-  //     'If user with provided id does not exist API will return 404 NotFoundException'
-  // })
-  // findOne(@Param('id') id: string): Promise<User> {   
-  //   return this.usersService.findOne(id);
-  // }
+  @Get('find/:id')
+  @ApiParam({
+    name: 'id',
+    example: '99'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns one user from the database by id',
+    type: User
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      'If user with provided id does not exist API will return 404 NotFoundException'
+  })
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {   
+    return this.usersService.findOne(id);
+  }
 
-  // @Get('findAll')
-  // @ApiResponse({
-  //   status: 200,
-  //   description: `Returns an array of users from the database 
-  //     or an empty array if there are no users`,
-  //   type: [User]
-  // })
-  // findAll(@Query() paginationDto: PaginationDto): Promise<User[]> {
-  //   return this.usersService.findAll(paginationDto);
-  // }
+  @Get('findAll')
+  @ApiResponse({
+    status: 200,
+    description: `Returns an array of users from the database 
+      or an empty array if there are no users`,
+    type: [User]
+  })
+  findAll(@Query() paginationDto: PaginationDto): Promise<User[]> {
+    return this.usersService.findAll(paginationDto);
+  }
   
-  // @Delete(':id')
-  // @ApiParam({
-  //   name: 'id',
-  //   example: '5QujReZ4R2tHQNPwip66'
-  // })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Removes user from the database by his id'
-  // })
-  // remove(@Param('id') id: string): Promise<void> {
-  //   return this.usersService.remove(id);
-  // }
+  @Delete(':id')
+  @ApiParam({
+    name: 'id',
+    example: '63'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Removes user from the database by id'
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      'If user with provided id does not exist API will return 404 NotFoundException'
+  })
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.usersService.remove(id);
+  }
 }
