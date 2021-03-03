@@ -9,7 +9,13 @@ import {
   Patch,
   Post,
   Query,
+  Res,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { Response } from 'express';
+
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,6 +23,7 @@ import { FindUsersDto } from './dto/find-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
+import { Header } from '@nestjs/common';
 
 @ApiTags('users')
 @Controller('users')
@@ -152,5 +159,33 @@ export class UsersController {
   })
   remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.usersService.remove(id);
+  }
+
+  @Post('upload')
+  @ApiResponse({
+    status: 201,
+    description: 'Upload file'
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  upload(@UploadedFile() file: Express.Multer.File): Promise<void> {
+    return this.usersService.upload(file);
+  }
+
+  @Get('download/:fileName')
+  @Header('Content-Type', 'image/jpg')
+  @ApiResponse({
+    status: 200,
+    description: 'Returs file (Buffer) by its name',
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      'If file with provided name does not exist API will return 404 NotFoundException'
+  })
+  async downloadFile(
+    @Res() res: Response,
+    @Param('fileName') fileName: string
+  ): Promise<void> {
+    res.send(await this.usersService.download(fileName));
   }
 }

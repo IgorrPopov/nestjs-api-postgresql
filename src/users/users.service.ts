@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { maxLimit } from 'src/common/constants/common.const';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { StorageService } from 'src/storage/storage.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FindUsersDto } from './dto/find-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -10,7 +11,10 @@ import { UserRepository } from './user.repository';
 @Injectable()
 export class UsersService {
 
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly storageService: StorageService
+  ) {}
 
   create(createUserDto: CreateUserDto): Promise<User> {
     return this.userRepository.createUser(createUserDto);
@@ -48,5 +52,13 @@ export class UsersService {
 
   remove(id: number): Promise<void> {
     return this.userRepository.removeUser(id);
+  }
+
+  upload(file: Express.Multer.File): Promise<void> {
+    return this.storageService.uploadFile(file);
+  }
+
+  download(fileName: string): Promise<Buffer> {
+    return this.storageService.downloadFile(fileName);
   }
 }
