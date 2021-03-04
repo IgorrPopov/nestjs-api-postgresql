@@ -188,4 +188,12 @@ export class UsersController {
   ): Promise<void> {
     res.send(await this.usersService.download(fileName));
   }
+
+  @Post('message')
+  sendMessage(
+    @Body('message') message: string, 
+    @Body('token') userRegistrationToken: string
+  ) {
+    return this.usersService.sendMessage(userRegistrationToken, message);
+  }
 }

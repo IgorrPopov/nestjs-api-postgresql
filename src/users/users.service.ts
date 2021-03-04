@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { maxLimit } from 'src/common/constants/common.const';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { FirebaseAdminService } from 'src/firebase-admin/firebase-admin.service';
 import { StorageService } from 'src/storage/storage.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FindUsersDto } from './dto/find-users.dto';
@@ -13,7 +14,8 @@ export class UsersService {
 
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly storageService: StorageService
+    private readonly storageService: StorageService,
+    private readonly firebaseAdminService: FirebaseAdminService
   ) {}
 
   create(createUserDto: CreateUserDto): Promise<User> {
@@ -60,5 +62,9 @@ export class UsersService {
 
   download(fileName: string): Promise<Buffer> {
     return this.storageService.downloadFile(fileName);
+  }
+
+  sendMessage(userRegistrationToken: string, message: string) {
+    return this.firebaseAdminService.sendMessage(userRegistrationToken, message);
   }
 }

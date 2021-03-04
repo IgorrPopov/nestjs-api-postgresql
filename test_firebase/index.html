@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-analytics.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-messaging.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyDkD4ii2a-teW7COYFvY2TfJaBVEC4Cw34",
+    authDomain: "cloud-store-test-app.firebaseapp.com",
+    projectId: "cloud-store-test-app",
+    storageBucket: "cloud-store-test-app.appspot.com",
+    messagingSenderId: "418137229436",
+    appId: "1:418137229436:web:4702e54d4676e0305a61f9",
+    measurementId: "G-CDZJCWEHTT"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  const messaging = firebase.messaging();
+
+  messaging.requestPermission()
+    .then(() => {
+      console.log('Get permission');
+      return messaging.getToken();
+    })
+    .then(token => {
+      console.log({ token });
+    })
+    .catch(error => {
+      console.log(error.message);
+    });
+
+  messaging.onMessage(payload => {
+    console.log('onMessage: ', payload);
+  })
+
+</script>
+</body>
+</html>
