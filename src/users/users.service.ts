@@ -3,6 +3,7 @@ import { maxLimit } from 'src/common/constants/common.const';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { FirebaseAdminService } from 'src/firebase-admin/firebase-admin.service';
 import { StorageService } from 'src/storage/storage.service';
+import { CreateMessageDto } from './dto/create-message.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FindUsersDto } from './dto/find-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -64,7 +65,7 @@ export class UsersService {
     return this.storageService.downloadFile(fileName);
   }
 
-  sendMessage(userRegistrationToken: string, message: string) {
-    return this.firebaseAdminService.sendMessage(userRegistrationToken, message);
+  sendMessage(createMessageDto: CreateMessageDto): Promise<void> {
+    return this.firebaseAdminService.sendMessage(createMessageDto);
   }
 }

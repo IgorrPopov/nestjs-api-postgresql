@@ -24,6 +24,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { Header } from '@nestjs/common';
+import { CreateMessageDto } from './dto/create-message.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -190,10 +191,15 @@ export class UsersController {
   }
 
   @Post('message')
-  sendMessage(
-    @Body('message') message: string, 
-    @Body('token') userRegistrationToken: string
-  ) {
-    return this.usersService.sendMessage(userRegistrationToken, message);
+  @ApiResponse({
+    status: 201,
+    description: 'Send to client a message by passing his token',
+  })
+  @ApiResponse({
+    status: 400,
+    description: `If the body does not match CreateMessageDto then the API will return 400 bad request`
+  })
+  sendMessage(@Body() createMessageDto: CreateMessageDto): Promise<void> {
+    return this.usersService.sendMessage(createMessageDto);
   }
 }
