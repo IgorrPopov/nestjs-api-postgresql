@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { CloudLoogerService } from 'src/cloud-logger/cloud-looger.service';
 import { maxLimit } from 'src/common/constants/common.const';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { FirebaseAdminService } from 'src/firebase-admin/firebase-admin.service';
@@ -16,10 +17,14 @@ export class UsersService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly storageService: StorageService,
-    private readonly firebaseAdminService: FirebaseAdminService
+    private readonly firebaseAdminService: FirebaseAdminService,
+    private readonly cloudLoggerService: CloudLoogerService
   ) {}
 
   create(createUserDto: CreateUserDto): Promise<User> {
+
+    this.cloudLoggerService.sendLog('commomLog', `user was created: ${JSON.stringify(createUserDto)}`);
+
     return this.userRepository.createUser(createUserDto);
   }
 

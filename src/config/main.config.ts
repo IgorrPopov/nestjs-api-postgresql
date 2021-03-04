@@ -1,5 +1,7 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 
+const projectId = 'cloud-store-test-app';
+
 const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   host: 'localhost',
@@ -11,4 +13,4 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   synchronize: true,
 };
 
-export { typeOrmConfig }; 
+export { typeOrmConfig, projectId }; 
