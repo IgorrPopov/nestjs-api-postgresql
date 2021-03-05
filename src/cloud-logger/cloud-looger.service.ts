@@ -1,4 +1,4 @@
-const pino = require("pino")("./logs/cloud-logger.log");
+const pino = require('pino')('./logs/cloud-logger.log');
 
 import { Injectable } from '@nestjs/common';
 import { Entry, Log, Logging } from '@google-cloud/logging';
@@ -21,7 +21,7 @@ export class CloudLoogerService {
     const metadata = {
       resource: { type: 'global' },
       // See: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#logseverity
-      severity: 'ERROR',
+      severity: 'ERROR'
     };
 
     const logMessage = `[${status}] [${service}] ${message} [contextId - ${contextId}]`;
@@ -38,7 +38,7 @@ export class CloudLoogerService {
 
     const metadata = {
       resource: { type: 'global' },
-      severity: 'INFO',
+      severity: 'INFO'
     };
 
     const logMessage = `[${status}] [${service}] ${message} [contextId - ${contextId}]`;

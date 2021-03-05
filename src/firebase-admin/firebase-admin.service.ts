@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMessageDto } from 'src/users/dto/create-message.dto';
+import { CreateMessageDto } from '../users/dto/create-message.dto';
 import { admin } from './config/firebase-admin.config';
 
 @Injectable()

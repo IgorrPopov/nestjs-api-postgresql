@@ -1,4 +1,4 @@
-import { TypeOrmModuleOptions } from "@nestjs/typeorm";
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 const projectId = 'cloud-store-test-app';
 
@@ -10,7 +10,7 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   password: 'postgres',
   database: 'api-db',
   entities: [__dirname + '/../**/*.entity.js'],
-  synchronize: true,
+  synchronize: true
 };
 
 export { typeOrmConfig, projectId }; 

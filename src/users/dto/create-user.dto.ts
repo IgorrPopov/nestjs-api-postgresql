@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from 'class-validator';
-import { smallStringMaxLength } from 'src/common/constants/common.const';
+import { smallStringMaxLength } from '../../common/constants/common.const';
 
 export class CreateUserDto {
   @IsNotEmpty()

@@ -1,8 +1,8 @@
 require('dotenv').config();
 const async_hooks = require('async_hooks');
 
-const pino = require("pino")("./logs/info.log");
-const expressPino = require("express-pino-logger")({
+const pino = require('pino')('./logs/info.log');
+const expressPino = require('express-pino-logger')({
   logger: pino
 });
 
@@ -59,7 +59,7 @@ function init(asyncId: string, type: string, triggerAsyncId: string): void {
   if (executionContexts[triggerAsyncId]) {
     executionContexts[asyncId] = executionContexts[triggerAsyncId];
   } else {
-    executionContexts[asyncId] = { id: uuidv4() }
+    executionContexts[asyncId] = { id: uuidv4() };
   }
 }
 

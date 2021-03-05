@@ -1,9 +1,9 @@
 const async_hooks = require('async_hooks');
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { CloudLoogerService } from 'src/cloud-logger/cloud-looger.service';
-import { maxLimit } from 'src/common/constants/common.const';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { DeleteResult, EntityRepository, Repository, UpdateResult } from 'typeorm';
+import { CloudLoogerService } from '../cloud-logger/cloud-looger.service';
+import { maxLimit } from '../common/constants/common.const';
+import { PaginationDto } from '../common/dto/pagination.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FindUsersDto } from './dto/find-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';

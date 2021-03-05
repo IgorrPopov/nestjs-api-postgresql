@@ -12,13 +12,13 @@ import {
   Query,
   Res,
   UploadedFile,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { Response } from 'express';
 
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FindUsersDto } from './dto/find-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -26,7 +26,7 @@ import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { Header } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { CloudLoogerService } from 'src/cloud-logger/cloud-looger.service';
+import { CloudLoogerService } from '../cloud-logger/cloud-looger.service';
 import { executionContexts } from '../main';
 
 @ApiTags('users')
@@ -105,7 +105,7 @@ export class UsersController {
   })
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body() updateUserDto: UpdateUserDto
   ): Promise<User> {
     return this.usersService.update(id, updateUserDto);
   }
@@ -120,7 +120,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: 400,
-    description: `If the query does not match FindUsersDto then the API will return 400 bad request`
+    description: 'If the query does not match FindUsersDto then the API will return 400 bad request'
   })
   @Get()
   find(@Query() findUsersDto: FindUsersDto): Promise<User[]> {
@@ -189,7 +189,7 @@ export class UsersController {
   @Header('Content-Type', 'image/jpg')
   @ApiResponse({
     status: 200,
-    description: 'Returs file (Buffer) by its name',
+    description: 'Returs file (Buffer) by its name'
   })
   @ApiResponse({
     status: 404,
@@ -206,11 +206,11 @@ export class UsersController {
   @Post('message')
   @ApiResponse({
     status: 201,
-    description: 'Send to client a message by passing his token',
+    description: 'Send to client a message by passing his token'
   })
   @ApiResponse({
     status: 400,
-    description: `If the body does not match CreateMessageDto then the API will return 400 bad request`
+    description: 'If the body does not match CreateMessageDto then the API will return 400 bad request'
   })
   sendMessage(@Body() createMessageDto: CreateMessageDto): Promise<void> {
     return this.usersService.sendMessage(createMessageDto);
