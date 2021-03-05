@@ -1,3 +1,4 @@
+const async_hooks = require('async_hooks');
 import {
   Body,
   Controller,
@@ -25,11 +26,16 @@ import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { Header } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { CloudLoogerService } from 'src/cloud-logger/cloud-looger.service';
+import { executionContexts } from '../main';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly cloudLoggerService: CloudLoogerService
+  ) {}
 
   @Post()
   @ApiBody({ type: CreateUserDto })
@@ -45,6 +51,13 @@ export class UsersController {
     then the API will return 400 bad request`
   })
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
+
+    this.cloudLoggerService.sendInfoLog(
+      'UsersController.create',
+      executionContexts[async_hooks.executionAsyncId()]?.id,
+      `input data: ${JSON.stringify(createUserDto)}`
+    );
+
     return this.usersService.create(createUserDto);
   }
 

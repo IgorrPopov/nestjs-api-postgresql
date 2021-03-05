@@ -1,3 +1,4 @@
+const async_hooks = require('async_hooks');
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CloudLoogerService } from 'src/cloud-logger/cloud-looger.service';
 import { maxLimit } from 'src/common/constants/common.const';
@@ -10,6 +11,7 @@ import { FindUsersDto } from './dto/find-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UserRepository } from './user.repository';
+import { executionContexts } from '../main';
 
 @Injectable()
 export class UsersService {
@@ -23,7 +25,11 @@ export class UsersService {
 
   create(createUserDto: CreateUserDto): Promise<User> {
 
-    this.cloudLoggerService.sendLog('commomLog', `user was created: ${JSON.stringify(createUserDto)}`);
+    this.cloudLoggerService.sendInfoLog(
+      'UsersService.create',
+      executionContexts[async_hooks.executionAsyncId()]?.id,
+      `input data: ${JSON.stringify(createUserDto)}`
+    );
 
     return this.userRepository.createUser(createUserDto);
   }

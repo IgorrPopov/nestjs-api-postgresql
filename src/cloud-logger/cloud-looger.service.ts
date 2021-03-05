@@ -1,3 +1,5 @@
+const pino = require("pino")("./logs/cloud-logger.log");
+
 import { Injectable } from '@nestjs/common';
 import { Entry, Log, Logging } from '@google-cloud/logging';
 import { projectId } from '../config/main.config';
@@ -10,8 +12,11 @@ export class CloudLoogerService {
     this.logging = new Logging({ projectId });
   }
 
-  public sendLog(logName: string, logMessage: string): void {
-    const log = this.logging.log(logName);
+
+  public sendErrorLog(service: string, contextId: string, message: string): void {
+    const status = 'error';
+
+    const log = this.logging.log(status + '_log');
 
     const metadata = {
       resource: { type: 'global' },
@@ -19,13 +24,32 @@ export class CloudLoogerService {
       severity: 'ERROR',
     };
 
+    const logMessage = `[${status}] [${service}] ${message} [contextId - ${contextId}]`;
     const entry = log.entry(metadata, logMessage);
-
     this.writeLog(log, entry, logMessage);
+
+    pino.error(logMessage);
+  }
+
+  public sendInfoLog(service: string, contextId: string, message: string): void {
+    const status = 'info';
+
+    const log = this.logging.log(status + '_log');
+
+    const metadata = {
+      resource: { type: 'global' },
+      severity: 'INFO',
+    };
+
+    const logMessage = `[${status}] [${service}] ${message} [contextId - ${contextId}]`;
+    const entry = log.entry(metadata, logMessage);
+    this.writeLog(log, entry, logMessage);
+
+    pino.info(logMessage);
   }
 
   private async writeLog(log: Log, entry: Entry, logMessage: string): Promise<void> {
     await log.write(entry);
-    console.log(`Logged: ${ logMessage }`);
+    // console.log(`Logged: ${ logMessage }`); 
   }
 }
